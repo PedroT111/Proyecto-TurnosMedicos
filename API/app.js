@@ -42,7 +42,9 @@ const qy = util.promisify(conexion.query).bind(conexion);
             let matricula= req.body.matricula;
             let especialidad = req.body.especialidad;
 
-            if(nombre == ""|| apellido == "" ||matricula == "" || especialidad == "" ){ //No me toma el .lenght
+            let query = "SELECT * FROM medicos WHERE matricula = ?"
+
+            if(nombre.length === 0|| apellido === 0 || matricula === 0 || especialidad === 0 ){ //No me toma el .lenght
                 throw new Error ("Faltan completar datos")
             }
 
@@ -50,7 +52,6 @@ const qy = util.promisify(conexion.query).bind(conexion);
                 throw new Error ("Todos los campos son obligatorios");
             }
            
-            let query = "SELECT * FROM medicos WHERE matricula = ?"
             let respuesta = await qy(query, [matricula]);
 
             if(respuesta.length > 0){
@@ -85,8 +86,92 @@ const qy = util.promisify(conexion.query).bind(conexion);
     })
 
     //GET id
+    app.get("/medico/:id", async (req, res) => {
+        try{
+            let id = req.params.id;
+            
+            const query = "SELECT * FROM medicos WHERE id = ?";
+            const respuesta = await qy(query, [id]);
+
+            if(respuesta.length === 0){
+                throw new Error("Médico no encontrado")
+            }
+
+            res.send({"respuesta": respuesta});
+            res.status(200);
+
+        }
+        catch(e){
+            console.error(e.message);   
+            res.status(413).send({"Error": e.message});
+
+        }
+    })
+
     //PUT
+    app.put("/medico/:id", async (req, res) => {
+        try{
+            let nombre = req.body.nombre;
+            let apellido = req.body.apellido;
+            let matricula = req.body.matricula;
+            let especialidad = req.body.especialidad;
+            let id = req.params.id;
+
+            let query = "SELECT * FROM medicos WHERE id";
+            let respuesta = await qy ( query, [id]) ;
+
+            if(respuesta.length === 0){
+                "No se encontró al medico"
+            }
+
+            if(nombre.length===0 || apellido.length === 0 || matricula.length === 0 || especialidad.length === 0) {
+                throw new Error("Faltan completar datos");
+            }
+
+            if(!nombre || !apellido || !matricula || !especialidad){
+                throw new Error("Todos los campos son obligatorios");
+            }
+
+            
+
+            query = "UPDATE medicos SET nombre = ?, apellido = ?, matricula = ?, especialidad = ? WHERE id = ?"
+            respuesta = await qy(query, [nombre, apellido, matricula, especialidad, id]);
+            res.send({"respuesta" : "Los datos fueron actualizados"});
+            res.status(200);
+
+        }
+        catch(e){
+            console.error(e.message);   
+            res.status(413).send({"Error": e.message});
+
+        }
+    })
     //DELETE
+
+    app.delete("/medico/:id", async(req, res) => {
+        try{
+            let id = req.params.id;
+
+        let query = "SELECT * FROM medicos WHERE id = ?";
+        let respuesta = await qy(query, [id]);
+
+        if(respuesta.length === 0){
+            throw new Error("No se encuentra al médico")
+        }
+
+        query = "DELETE FROM medicos WHERE id = ?"
+        respuesta = await qy(query, [id]);
+        res.send({"respuesta" : "El medico fue eliminado"})
+        res.status(200);
+
+        }
+        catch(e){
+            console.error(e.message);   
+            res.status(413).send({"Error": e.message});
+
+
+        }
+    })
 
 
 
