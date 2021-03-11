@@ -1,0 +1,31 @@
+.boxMedicos{
+    display: flex;
+    flex-direction: row;
+    
+}
+.boxTabla{
+    width: 60%;
+    
+
+}
+.boxformulario{
+    background-color: blueviolet;
+    width: 30%;
+    margin-left: 90px;
+}
+.divform{
+    width: 90%;
+    background-color: brown;
+    margin: auto;
+}
+
+.divform form label{
+    margin-top: 20px;
+}
+
+.divform form{
+    margin-left: 50px;
+}
+.table{
+    margin-left: 30px;
+}

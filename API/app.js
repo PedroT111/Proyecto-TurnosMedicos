@@ -1,12 +1,15 @@
 const express= require("express");
 const mysql = require('mysql');
 const util = require('util');
+const cors = require("cors")
 
 const app= express();
+
 const port= process.env.PORT || 3000;
 
 
 app.use(express.json());
+app.use(cors());
 
 
 //CONEXIÓN CON LA BASE DE DATOS PHPMYADMIN
@@ -37,10 +40,10 @@ const qy = util.promisify(conexion.query).bind(conexion);
     //POST
     app.post("/medico", async (req, res) => {
         try{
-            let nombre = req.body.nombre;
-            let apellido = req.body.apellido;
-            let matricula= req.body.matricula;
-            let especialidad = req.body.especialidad;
+            let nombre = [req.body.nombre];
+            let apellido = [req.body.apellido];
+            let matricula= [req.body.matricula];
+            let especialidad = [req.body.especialidad];
 
             let query = "SELECT * FROM medicos WHERE matricula = ?"
 
@@ -111,11 +114,11 @@ const qy = util.promisify(conexion.query).bind(conexion);
     //PUT
     app.put("/medico/:id", async (req, res) => {
         try{
-            let nombre = req.body.nombre;
-            let apellido = req.body.apellido;
-            let matricula = req.body.matricula;
-            let especialidad = req.body.especialidad;
-            let id = req.params.id;
+            let nombre = [req.body.nombre];
+            let apellido = [req.body.apellido];
+            let matricula = [req.body.matricula];
+            let especialidad = [req.body.especialidad];
+            let id = [req.params.id];
 
             let query = "SELECT * FROM medicos WHERE id";
             let respuesta = await qy ( query, [id]) ;
