@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './app.css';
 import Pacientes from './componentes/pacientes/Pacientes'
 import ProyectoState from './componentes/pacientes/useContext/proyectState'
 import {BrowserRouter, BrowserRouter as Router, Route, Switch, Link} from "react-router-dom";

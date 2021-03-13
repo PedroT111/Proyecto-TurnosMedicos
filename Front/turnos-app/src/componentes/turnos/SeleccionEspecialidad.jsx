@@ -4,23 +4,46 @@ import axios from 'axios' ;
 const SeleccionEspecialidad = () => {
 
     const [especialidades, guardarEspecialidades] = useState([{}])
-
-
+    const [especialidadFiltrada, guardarEspecialidadFiltrada] = useState([{}])
+    const [asd, guardarAsd] = useState([])
 
     useEffect(() => {
-        const consultarAPI =  () => {
-            const url=`http://localhost:3000/medicos`;
-             axios.get(url)
+        const consultarAPI =async () => {
+            const url=`http://localhost:3000/medico`;
+            await axios.get(url)
             .then ( respuesta  => {
-                guardarEspecialidades(respuesta.data.respuesta)
-                
+                guardarEspecialidades(  respuesta.data.respuesta)
+                repeticion()
             })
             .catch(error =>{
-                console.log(error)
+            return    console.log(error)
             })
         } 
         consultarAPI()
+        
     }, [])
+
+    
+    const repeticion = () =>{
+
+        
+    let lista = especialidades.map(especialidad =>(
+        guardarEspecialidadFiltrada({...especialidadFiltrada , [especialidad]: especialidad.especialidad })
+    ))
+    console.log(lista)
+         /* for( let i = 0 ; especialidades.length > i ; i++){
+
+            
+            for(let j = 0;especialidadFiltrada.length > j   ;j++){
+                if(especialidades[{i}] !== especialidadFiltrada[{j}] ){
+                    especialidadFiltrada.push(especialidades.especialidad[{i}]) 
+                  
+             }else{console.log(especialidades[{i}])}}
+        }  */
+    } 
+    
+    
+
 
     return (
         <Fragment>
