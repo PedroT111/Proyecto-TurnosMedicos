@@ -7,13 +7,17 @@ const SeleccionEspecialidad = () => {
     const [especialidadFiltrada, guardarEspecialidadFiltrada] = useState([{}])
     const [asd, guardarAsd] = useState([])
 
+    const{ especialidad} =especialidades
+
     useEffect(() => {
         const consultarAPI =async () => {
             const url=`http://localhost:3000/medico`;
             await axios.get(url)
-            .then ( respuesta  => {
+             .then (  respuesta  => {
                 guardarEspecialidades(  respuesta.data.respuesta)
-                repeticion()
+                
+                
+            
             })
             .catch(error =>{
             return    console.log(error)
@@ -24,16 +28,32 @@ const SeleccionEspecialidad = () => {
     }, [])
 
     
-    const repeticion = () =>{
 
+
+    const filtrarEspecialidades = () =>{
         
-    let lista = especialidades.map(especialidad =>(
-        guardarEspecialidadFiltrada({...especialidadFiltrada , [especialidad]: especialidad.especialidad })
-    ))
+        
+    let lista = especialidades.map(especialidad =>{
+
+        return (
+            { especialidad:especialidad.especialidad}
+        )
+        })
     console.log(lista)
-         /* for( let i = 0 ; especialidades.length > i ; i++){
+
+        for( let i = 0 ; lista.length > i ; i++){  
+            for(let j = 0;especialidadFiltrada.length > j   ;j++){
+                if(lista[ i]!= especialidadFiltrada[j] ){
+                    guardarEspecialidadFiltrada(...especialidadFiltrada,{})
+                   
+                    /*  especialidadFiltrada.push(lista[i]) */
+            }}
 
             
+        }
+        
+        console.log(especialidadFiltrada)
+         /* for( let i = 0 ; especialidades.length > i ; i++){  
             for(let j = 0;especialidadFiltrada.length > j   ;j++){
                 if(especialidades[{i}] !== especialidadFiltrada[{j}] ){
                     especialidadFiltrada.push(especialidades.especialidad[{i}]) 
@@ -42,7 +62,9 @@ const SeleccionEspecialidad = () => {
         }  */
     } 
     
-    
+   
+    filtrarEspecialidades()
+   
 
 
     return (
@@ -55,7 +77,7 @@ const SeleccionEspecialidad = () => {
                             <option 
                                 key={especialidad.especialidad} 
                                 value={especialidad.especialidad}
-                            > {especialidad.especialidad}</option>
+                            > {especialidadFiltrada.especialidad}</option>
                         ))}
                 </select>
             </form>
