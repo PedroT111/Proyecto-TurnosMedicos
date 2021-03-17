@@ -337,14 +337,14 @@ const qy = util.promisify(conexion.query).bind(conexion);
                 let fecha = req.body.fecha
                 let hora = req.body.hora
                 let medicoID = req.body.medicoID
-                let pacienteID = req.body.pacienteID
+                let documento = req.body.documento
 
-                if(!descripcion||!fecha||!hora||!medicoID||!pacienteID){
+                if(!descripcion||!fecha||!hora||!medicoID||!documento){
                     throw new Error('No se envio toda la información')
                 }
 
 
-                if(descripcion.trim().length===0||fecha.trim().length===0||hora.trim().length===0||medicoID.trim().length===0||pacienteID.trim().length===0){
+                if(descripcion.trim().length===0||fecha.trim().length===0||hora.trim().length===0||medicoID.trim().length===0||documento.trim().length===0){
                     throw new Error('Se envio información vacia')
                 }
 
@@ -360,14 +360,14 @@ const qy = util.promisify(conexion.query).bind(conexion);
                     throw new Error ('El medico ya tiene un turno en ese horario y dia')
                 }
 
-                query = 'SELECT * FROM pacientes WHERE id =?'
-                respuesta = await qy( query, [pacienteID])
+                query = 'SELECT * FROM pacientes WHERE documento =?'
+                respuesta = await qy( query, [documento])
                 if(respuesta.length===0){
                     throw new Error('El paciente ingresado no existe')
                 }
 
-                query='INSERT INTO citas (descripcion, fecha, hora, medicoID, pacienteID) VALUE ( ?, ?, ?, ?, ?)'
-                respuesta = await qy (query,[descripcion, fecha, hora, medicoID,pacienteID])
+                query='INSERT INTO citas (descripcion, fecha, hora, medicoID, documento) VALUE ( ?, ?, ?, ?, ?)'
+                respuesta = await qy (query,[descripcion, fecha, hora, medicoID,documento])
                 res.status(200).send({'respuesta': respuesta })
 
             } catch (e) {
@@ -401,13 +401,13 @@ const qy = util.promisify(conexion.query).bind(conexion);
                     let fecha = req.body.fecha
                     let hora = req.body.hora
                     let medicoID = req.body.medicoID
-                    let pacienteID = req.body.pacienteID
+                    let documento = req.body.documento
                     let id = req.params.id
 
-                    if(!descripcion||!fecha||!hora||!medicoID||!pacienteID){
+                    if(!descripcion||!fecha||!hora||!medicoID||!documento){
                         throw new Error('No se envio la informacón solicitada')
                     }
-                    if(descripcion.trim().length===0||fecha.trim().length===0||hora.trim().length===0||medicoID.trim().length===0||pacienteID.trim().length===0){
+                    if(descripcion.trim().length===0||fecha.trim().length===0||hora.trim().length===0||medicoID.trim().length===0||documento.trim().length===0){
                         throw new Error('Se envio información vacia')
                     }
                     
@@ -423,8 +423,8 @@ const qy = util.promisify(conexion.query).bind(conexion);
                         throw new Error('El medico indicado no existe')
                     }
                     
-                    query = 'SELECT * FROM pacientes WHERE  id = ?'
-                    respuesta = await qy (query,[pacienteID])
+                    query = 'SELECT * FROM pacientes WHERE  documento = ?'
+                    respuesta = await qy (query,[documento])
                     if(respuesta.length === 0){
                         throw new Error('El paciente indicado no existe')
                     }
@@ -435,14 +435,14 @@ const qy = util.promisify(conexion.query).bind(conexion);
                         throw new Error('El medico ya tiene un turno reservado para esa hora')
                     }
 
-                    query = 'SELECT * FROM citas WHERE  pacienteID = ? AND hora = ? AND fecha = ?'
-                    respuesta = await qy (query,[pacienteID, hora , fecha])
+                    query = 'SELECT * FROM citas WHERE  documento = ? AND hora = ? AND fecha = ?'
+                    respuesta = await qy (query,[documento, hora , fecha])
                     if(respuesta.length > 0){
                         throw new Error('El paciente ya tiene un turno reservado para esa hora')
                     }
 
-                    query = 'UPDATE citas SET descripcion = ?, fecha = ?, hora =?, medicoID=?, pacienteID=?  WHERE id =? '
-                    respuesta = await qy (query,[descripcion, fecha, hora, medicoID, pacienteID, id ])
+                    query = 'UPDATE citas SET descripcion = ?, fecha = ?, hora =?, medicoID=?, documento=?  WHERE id =? '
+                    respuesta = await qy (query,[descripcion, fecha, hora, medicoID, documento, id ])
                     res.status(200).send({'respuesta':respuesta})
 
                 } catch (e) {

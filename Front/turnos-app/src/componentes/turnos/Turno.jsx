@@ -2,13 +2,14 @@ import React,{useState,useContext, Fragment} from 'react';
 import axios from 'axios'
 import turnoContext from './useContextTurnos/turnoContext'
 import Error from'./ErrorTurnos'
-import SeleccionEspecialidad from './SeleccionEspecialidad'
+import SeleccionEspecialidad from './SeleccionEspecialidad' ;
+import SeleccionHorario from './SeleccionHorario'
 
 const Turno = () => {
 
     //useContext
     const turnosContext = useContext(turnoContext)
-    const {guardarDatosPacientes,datosPacientes, guardarVerificacionPaciente,verificacionPaciente,guardarErrorDocumento,errorDocumento } = turnosContext
+    const {guardarDatosPacientes,datosPacientes, guardarVerificacionPaciente,verificacionPaciente,guardarErrorDocumento,errorDocumento,guardarEspecialidadElegida,especialidadElegida,guardarElegirHorario,elegirHorario } = turnosContext
 
     //State local
     const [dniTurno, guardarDniTurno] = useState(0)
@@ -61,14 +62,14 @@ const Turno = () => {
     return (
         <Fragment>
         <div className='asd'>
-        <main  >
+        <main  className='col-5'>
             <div className='contenedor-turnos'>
            {verificacionPaciente
             ?
                 <SeleccionEspecialidad />
             : 
             <Fragment>
-                <h6 color='white'>Solicitar un turno</h6>
+                <h6 color='white'>Solicitar un turno Online</h6>
 
                 <form  onSubmit={SolicitarTurno} >
                 <label
@@ -88,8 +89,10 @@ const Turno = () => {
                 </form>  
             </Fragment>}
             </div>
-            
         </main>
+        <aside className='col-5 aside-horario'>
+            {elegirHorario ?<SeleccionHorario />   : null}
+        </aside >
         </div>
         </Fragment>
         );

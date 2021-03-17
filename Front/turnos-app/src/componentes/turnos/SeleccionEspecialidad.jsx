@@ -1,14 +1,39 @@
-import React,{useState, useEffect, Fragment} from 'react' ;
+import React,{useState, useEffect, Fragment, useContext} from 'react' ;
 import axios from 'axios' ;
+import turnoContext from '../turnos/useContextTurnos/turnoContext' ;
+import  {  registerLocale ,  setDefaultLocale  } from'react-datepicker' ;
+import  DatePicker from'react-datepicker' ;
+import 'react-datepicker/dist/react-datepicker.css'
+import es from 'date-fns/locale/es';
+registerLocale('es', es)
 
 const SeleccionEspecialidad = () => {
 
+
+    //useContext
+    const turnosContext = useContext(turnoContext)
+    const { guardarVerificacionPaciente,verificacionPaciente,guardarElegirMedico,elegirMedico,guardarEspecialidadElegida,guardarMedicoElegido,medicoElegido,especialidadElegida,elegirHorario,guardarElegirHorario,guardarFecha,fecha } = turnosContext
+    
+    
+    //State Local
     const [especialidades, guardarEspecialidades] = useState([{}])
-    const [especialidadFiltrada, guardarEspecialidadFiltrada] = useState([{}])
-    const [asd, guardarAsd] = useState([])
+    const [especialidadFiltrada, guardarEspecialidadFiltrada] = useState([])
+    const [elegirFecha, guardarElegirFecha] = useState(false)
 
-    const{ especialidad} =especialidades
+    
 
+    const onChange = value =>{
+        
+        value.toString();
+        guardarFecha(value)
+        guardarElegirHorario(true)
+        
+        
+    }
+    
+
+
+    //Funcion que trae todos los medicos
     useEffect(() => {
         const consultarAPI =async () => {
             const url=`http://localhost:3000/medico`;
@@ -16,8 +41,6 @@ const SeleccionEspecialidad = () => {
              .then (  respuesta  => {
                 guardarEspecialidades(  respuesta.data.respuesta)
                 
-                
-            
             })
             .catch(error =>{
             return    console.log(error)
@@ -33,26 +56,29 @@ const SeleccionEspecialidad = () => {
     const filtrarEspecialidades = () =>{
         
         
-    let lista = especialidades.map(especialidad =>{
+   /*  let lista = especialidades.map(especialidad =>{
 
         return (
-            { especialidad:especialidad.especialidad}
+            [especialidad.especialidad]
         )
         })
-    console.log(lista)
+    
+        for( let i = 0 ; lista.length >= i ; i++){  
+            console.log(lista)
 
-        for( let i = 0 ; lista.length > i ; i++){  
-            for(let j = 0;especialidadFiltrada.length > j   ;j++){
+            for( let j = 0 ; especialidadFiltrada.length >= j ; j++){
+                console.log(lista)
                 if(lista[ i]!= especialidadFiltrada[j] ){
-                    guardarEspecialidadFiltrada(...especialidadFiltrada,{})
+                    guardarEspecialidadFiltrada(...especialidadFiltrada,lista[ i])
+                    console.log('asd')
                    
                     /*  especialidadFiltrada.push(lista[i]) */
-            }}
+          /*   }}
 
             
-        }
+        } */
         
-        console.log(especialidadFiltrada)
+        
          /* for( let i = 0 ; especialidades.length > i ; i++){  
             for(let j = 0;especialidadFiltrada.length > j   ;j++){
                 if(especialidades[{i}] !== especialidadFiltrada[{j}] ){
@@ -60,27 +86,71 @@ const SeleccionEspecialidad = () => {
                   
              }else{console.log(especialidades[{i}])}}
         }  */
-    } 
+   /*  } */  
     
    
-    filtrarEspecialidades()
-   
+    /* filtrarEspecialidades()
+    console.log(especialidadFiltrada) */
+    }
 
+
+    const onChangeEspecialidad = especialidad => {
+        guardarEspecialidadElegida(especialidad)
+        guardarElegirMedico(true)
+        
+    }
+
+    const onChangeProfesional = idProfesional =>{
+        guardarMedicoElegido(idProfesional)
+        guardarElegirFecha(true)
+        
+    }
 
     return (
         <Fragment>
-            <form>
-                <label >Especialidad</label>
-                <select>
-                    <option value="">Seleccionar</option>
-                        {especialidades.map(especialidad =>(
-                            <option 
-                                key={especialidad.especialidad} 
-                                value={especialidad.especialidad}
-                            > {especialidadFiltrada.especialidad}</option>
-                        ))}
-                </select>
-            </form>
+            <h6 color='white'>Solicitar un turno Online</h6>
+                <form>
+                    <label >Especialidad :</label>
+                    <select onChange= { (e) =>onChangeEspecialidad(e.target.value)}   >
+                        <option value="">Seleccionar</option>
+                            {especialidades.map(especialidad =>(
+                                <option 
+                                    key={especialidad.especialidad} 
+                                    value={especialidad.especialidad}
+                                > {especialidad.especialidad} </option>
+                            ))}
+                    </select>
+                    
+                    {elegirMedico 
+                    ?<Fragment>
+                    <label >Profesional :</label>
+                    <select  onChange= { (e) =>onChangeProfesional(e.target.value)}   >
+                        <option value="">Seleccionar</option>
+                            {especialidades.filter(especialidad=> especialidadElegida === especialidad.especialidad ).map(aliasFiltrado=>(<option
+                                key={aliasFiltrado.id}
+                                value={aliasFiltrado.id}
+                            >{aliasFiltrado.nombre }         {aliasFiltrado.apellido }</option> ))  
+                            }
+                    </select>
+
+                    {elegirFecha  
+                    ? 
+                        <div >
+                            <h3 className="text-light">Seleccione la fecha</h3>
+                            <DatePicker onChange={onChange }  selected={fecha}
+                            locale="es" isClearable     />
+                        </div>   
+                        
+                    : null  }
+                    </Fragment>
+
+                    : null
+                    
+                    }
+                </form>
+                
+                
+            
         </Fragment>
         );
 }
