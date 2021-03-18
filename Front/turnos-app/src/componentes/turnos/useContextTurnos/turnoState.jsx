@@ -22,7 +22,7 @@ const TurnoState = ( props) => {
     const options = { dateStyle: 'short' };
     const date = fecha.toLocaleString('es', options);
     
-     
+    const [dniTurno, guardarDniTurno] = useState(0)
     const [horarioElegido, guardarHorarioElegido] = useState('')
     return ( 
 
@@ -47,7 +47,9 @@ const TurnoState = ( props) => {
             guardarConfirmarCita,
             confirmarCita,
             guardarHorarioElegido,
-            horarioElegido
+            horarioElegido,
+            guardarDniTurno,
+            dniTurno
 
                         
             }}>

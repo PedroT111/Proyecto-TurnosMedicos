@@ -9,11 +9,9 @@ const Turno = () => {
 
     //useContext
     const turnosContext = useContext(turnoContext)
-    const {guardarDatosPacientes,datosPacientes, guardarVerificacionPaciente,verificacionPaciente,guardarErrorDocumento,errorDocumento,guardarEspecialidadElegida,especialidadElegida,guardarElegirHorario,elegirHorario } = turnosContext
+    const {guardarDatosPacientes,datosPacientes, guardarVerificacionPaciente,verificacionPaciente,guardarErrorDocumento,errorDocumento,guardarElegirHorario,elegirHorario,/* guardarDniTurno,dniTurno */ } = turnosContext
 
-    //State local
     const [dniTurno, guardarDniTurno] = useState(0)
-    
 
     const getPaciente = () =>{
         const consultarAPI =  () => {
@@ -79,7 +77,7 @@ const Turno = () => {
                     type="text"
                     className=' input'
                     placeholder='Número de documento'
-                    onChange={e => guardarDniTurno(e.target.value) }    
+                    onChange={e => guardarDniTurno(parseInt(e.target.value)) }    
                 />
                 <button 
                     className='btn col-6 btn-success mt-4'

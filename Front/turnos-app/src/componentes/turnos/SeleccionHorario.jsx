@@ -9,14 +9,14 @@ const SeleccionHorario = () => {
 
      //useContext
      const turnosContext = useContext(turnoContext)
-     const {guardarMedicoElegido,medicoElegido,guardarElegirHorario,elegirHorario,guardarFecha,fecha,guardarConfirmarCita,confirmarCita,guardarHorarioElegido,horarioElegido} = turnosContext
+     const {guardarConfirmarCita,confirmarCita,guardarHorarioElegido,medicoElegido,fecha} = turnosContext
 
     
     //State Local
     const [informacionMedico, guardarInformacionMedico] = useState({})
     const [turnosProgramados, guardarTurnosProgramados] = useState([{}])
     const [horarios, guardarHorarios] = useState([
-        "8:00 AM" , "8:30 AM", "9:00 AM ", "9:30 AM ", " 10:00 AM" , "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "13:00 PM", "13:30 PM", "14:00 PM", "14:30 PM", "15:00 PM", "15:30 PM"
+        "8:00 " , "8:30 ", "9:00  ", "9:30  ", "10:00 " , "10:30 ", "11:00 ", "11:30 ", "12:00 ", "12:30", "13:00 ", "13:30 ", "14:00 ", "14:30 ", "15:00 ", "15:30 "
     ])
     
 
@@ -43,6 +43,22 @@ const SeleccionHorario = () => {
         guardarConfirmarCita(true)
     }
 
+    const filtrar = horario =>{
+
+        let classname;
+        let result = turnosProgramados.filter(turnos => Date.parse(horario) === turnos.hora &&turnos.fecha===fecha )
+        console.log(result)
+        if(result.length !==0){
+            classname = 'text-warning'
+            
+        }else{
+            classname = 'text-light'
+            
+        }
+        
+        
+        return classname
+    }
     return ( 
         <Fragment>
                 {confirmarCita ? <ConfimarTurno />  : null}
@@ -56,13 +72,15 @@ const SeleccionHorario = () => {
                     </thead>
                         
                             
-                        
                     <tbody>
-                        {horarios.map(horarios =>(
-                                <tr onClick={(e => onClick(horarios))}
-                                    className='btn btl-block text-light'
+                        {horarios.map(horario =>(
+                            
+                                <tr onClick={(e => onClick(horario))}
+                                    className='btn btl-block  horario'
                                 >
-                                    <td>{horarios}</td>
+                                    {/* {turnosProgramados.filter(turnos =>turnos.hora === horarios && turnos.medicoID===medicoElegido).map(aliasFiltrado=>(<td className=' '>{horarios}</td> ))}  */}
+                                    <td className={filtrar(horario)}>{horario}</td>
+                                    
                                 </tr>
                                 
                             ))}
@@ -71,20 +89,7 @@ const SeleccionHorario = () => {
                             
             </div> 
             
-            {/* <div class="container col-2">
-                <summary class="card border-primary">
-                <div class="card-body">
-                    <p class="card-text">8:00 AM</p>
-                </div>
-                </summary>
-            </div>
-            <div class="container col-2">
-                <summary class="card border-primary">
-                <div class="card-body">
-                    <p class="card-text">8:00 AM</p>
-                </div>
-                </summary>
-            </div> */}
+            
             
         </Fragment>    
             

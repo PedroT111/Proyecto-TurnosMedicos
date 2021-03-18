@@ -339,14 +339,14 @@ const qy = util.promisify(conexion.query).bind(conexion);
                 let medicoID = req.body.medicoID
                 let documento = req.body.documento
 
-                if(!descripcion||!fecha||!hora||!medicoID||!documento){
+                if(!descripcion||!fecha||!hora||!medicoID){
                     throw new Error('No se envio toda la información')
                 }
 
 
-                if(descripcion.trim().length===0||fecha.trim().length===0||hora.trim().length===0||medicoID.trim().length===0||documento.trim().length===0){
+                /* if(descripcion.trim()===''||fecha.trim()===''||hora.trim()===''||medicoID.trim()===0||documento.trim()===0){
                     throw new Error('Se envio información vacia')
-                }
+                } */
 
                 let query ='SELECT * FROM medicos WHERE id = ? '
                 let respuesta = await qy( query,[medicoID])
